@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lowest Interest Home Loan - Poster & Calculator</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Font: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #e0f7fa; /* Light cyan background */
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Poster Specific Styles */
+        .poster-container {
+            background: linear-gradient(135deg, #1e3a8a 0%, #06b6d4 100%); /* Deep Blue to Cyan gradient */
+            border-radius: 25px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            color: white;
+            padding: 50px 30px; /* Generous padding */
+            max-width: 650px; /* Max width for larger screens */
+            width: 100%; /* Full width on smaller screens */
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 25px; /* Space between sections */
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 40px; /* Space between poster and app */
+        }
+        .poster-container::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            left: -50px;
+            width: 150px;
+            height: 150px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            filter: blur(40px);
+        }
+        .poster-container::after {
+            content: '';
+            position: absolute;
+            bottom: -70px;
+            right: -70px;
+            width: 180px;
+            height: 180px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 50%;
+            filter: blur(50px);
+        }
+        .poster-headline {
+            font-size: 3.5rem; /* Large, impactful headline */
+            font-weight: 800;
+            line-height: 1.1;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.4);
+            margin-bottom: 10px;
+        }
+        .poster-subheadline {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 25px;
+            opacity: 0.95;
+        }
+        .interest-rate-highlight {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #34d399; /* Vibrant green accent color */
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+            margin-bottom: 25px;
+        }
+        .benefits-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            text-align: left;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .benefits-list li {
+            font-size: 1.2rem;
+            font-weight: 400;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            opacity: 0.9;
+        }
+        .benefits-list li svg {
+            color: #fbbf24; /* Bright yellow accent color for checkmarks */
+            min-width: 24px; /* Ensure icon size */
+            min-height: 24px;
+        }
+        .poster-cta-button {
+            background-color: #fbbf24; /* Vibrant yellow call to action */
+            color: #333; /* Dark text for contrast */
+            padding: 18px 40px;
+            border-radius: 12px;
+            font-size: 1.6rem;
+            font-weight: 700;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 35px;
+            transition: transform 0.3s ease-in-out, background-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            box-shadow: 0 8px 15px rgba(251, 191, 36, 0.4);
+        }
+        .poster-cta-button:hover {
+            transform: translateY(-5px) scale(1.02);
+            background-color: #fcd34d; /* Lighter yellow on hover */
+            box-shadow: 0 12px 20px rgba(251, 191, 36, 0.6);
+        }
+        .contact-info {
+            font-size: 1rem;
+            opacity: 0.8;
+            margin-top: 25px;
+        }
+        .contact-info a {
+            color: #e0f7fa; /* Lighter text for links on dark background */
+            text-decoration: underline;
+            transition: color 0.2s ease-in-out;
+        }
+        .contact-info a:hover {
+            color: #ffffff;
+        }
+        .poster-disclaimer {
+            font-size: 0.85rem;
+            opacity: 0.7;
+            margin-top: 15px;
+        }
+
+        /* Partner Banks Section Styles */
+        .partner-banks-section {
+            background-color: rgba(255, 255, 255, 0.15); /* Slightly transparent white background */
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 25px;
+            width: calc(100% - 40px); /* Adjust width for padding */
+            max-width: 550px; /* Slightly smaller than main container */
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .partner-banks-section h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #f0f8ff; /* Off-white for heading */
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+        }
+        .bank-slideshow-container {
+            min-height: 70px; /* Ensure consistent height for the logo slideshow */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden; /* Hide overflowing content during transition */
+        }
+        .bank-slideshow-item {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex; /* Use flex to center image/text */
+            justify-content: center;
+            align-items: center;
+            transform: translateX(100%); /* Start off-screen to the right */
+            transition: transform 1s ease-in-out; /* Smooth slide transition */
+        }
+        .bank-slideshow-item.active {
+            transform: translateX(0%); /* Slide into view */
+        }
+        .bank-slideshow-item.leaving {
+            transform: translateX(-100%); /* Slide out to the left */
+        }
+        .bank-slideshow-logo {
+            max-width: 180px; /* Max width for logos */
+            max-height: 60px; /* Max height for logos */
+            object-fit: contain; /* Ensure logo fits without distortion */
+            filter: drop-shadow(0 0 5px rgba(0,0,0,0.3)); /* Subtle shadow for professionalism */
+        }
+        .bank-slideshow-fallback-text {
+            color: #f0f8ff; /* Off-white for fallback text */
+            font-size: 1.4rem;
+            font-weight: 600;
+        }
+
+        /* React App Container Styles (similar to original app styling) */
+        #react-app-root {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 25px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            max-width: 650px; /* Match poster width for consistency */
+            width: 100%;
+            transform: transition-all duration-300;
+            margin-top: 20px; /* Space from poster */
+        }
+        #react-app-root:hover {
+            transform: scale(1.02);
+        }
+
+        /* Amortization Table Styles */
+        .amortization-table-container {
+            max-height: 400px; /* Limit height for scrollability */
+            overflow-y: auto; /* Enable vertical scrolling */
+            margin-top: 20px;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0; /* Light border */
+        }
+        .amortization-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            text-align: right; /* Align numbers to the right */
+        }
+        .amortization-table th, .amortization-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .amortization-table th {
+            background-color: #f8fafc; /* Light header background */
+            font-weight: 600;
+            color: #4a5568;
+            position: sticky; /* Make header sticky */
+            top: 0;
+            z-index: 1; /* Ensure header is above scrolling content */
+        }
+        .amortization-table tbody tr:nth-child(even) {
+            background-color: #fbfdff; /* Slightly different background for even rows */
+        }
+        .amortization-table tbody tr:hover {
+            background-color: #edf2f7; /* Highlight row on hover */
+        }
+        .amortization-table td:first-child, .amortization-table th:first-child {
+            text-align: center; /* Center payment number */
+        }
+
+
+        /* Responsive adjustments for Poster */
+        @media (max-width: 768px) {
+            .poster-headline {
+                font-size: 2.8rem;
+            }
+            .poster-subheadline {
+                font-size: 1.5rem;
+            }
+            .benefits-list li {
+                font-size: 1.1rem;
+            }
+            .poster-cta-button {
+                font-size: 1.4rem;
+                padding: 15px 30px;
+            }
+            .poster-container {
+                padding: 40px 25px;
+            }
+            #react-app-root {
+                padding: 30px;
+            }
+            .amortization-table th, .amortization-table td {
+                padding: 8px 10px;
+                font-size: 0.8rem;
+            }
+            .partner-banks-section h3 {
+                font-size: 1.3rem;
+            }
+            .bank-slideshow-logo {
+                max-width: 140px;
+                max-height: 50px;
+            }
+            .bank-slideshow-fallback-text {
+                font-size: 1.2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .poster-headline {
+                font-size: 2.2rem;
+            }
+            .poster-subheadline {
+                font-size: 1.2rem;
+            }
+            .benefits-list li {
+                font-size: 1rem;
+            }
+            .poster-cta-button {
+                font-size: 1.2rem;
+                padding: 12px 25px;
+            }
+            .poster-container {
+                padding: 30px 20px;
+            }
+            body {
+                padding: 10px;
+            }
+            #react-app-root {
+                padding: 20px;
+            }
+            .amortization-table th, .amortization-table td {
+                padding: 6px 8px;
+                font-size: 0.75rem;
+            }
+            .partner-banks-section h3 {
+                font-size: 1.1rem;
+            }
+            .bank-slideshow-logo {
+                max-width: 120px;
+                max-height: 40px;
+            }
+            .bank-slideshow-fallback-text {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Poster Section -->
+    <div class="poster-container">
+        <h1 class="poster-headline">
+            Unlock Your Dream Home & Save More!
+        </h1>
+        <p class="poster-subheadline">
+            Lowest Interest Home Loans Available Now
+        </p>
+
+        <!-- Static Interest Rate Text -->
+        <p class="interest-rate-highlight">
+            Interest rates starting from 7.35%*
+        </p>
+
+        <!-- Partner Banks Section with Slideshow -->
+        <div class="partner-banks-section">
+            <h3>Our Partner Banks</h3>
+            <div id="bankSlideshow" class="bank-slideshow-container">
+                <!-- Bank logos will be dynamically added here by JavaScript -->
+            </div>
+        </div>
+
+        <ul class="benefits-list">
+            <li>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                    <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clip-rule="evenodd" />
+                </svg>
+                <span>Competitive Interest Rates</span>
+            </li>
+            <li>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                    <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clip-rule="evenodd" />
+                </svg>
+                <span>Reduce Your Monthly Payments</span>
+            </li>
+            <li>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                    <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clip-rule="evenodd" />
+                </svg>
+                <span>Simple & Fast Application Process</span>
+            </li>
+            <li>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                    <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clip-rule="evenodd" />
+                </svg>
+                <span>Expert Guidance Every Step of the Way</span>
+            </li>
+        </ul>
+
+        <a href="https://wa.me/917503782090" target="_blank" class="poster-cta-button">
+            Chat with Expert
+        </a>
+
+        <p class="contact-info">
+            Visit our website: <a href="https://myfinancecare.in" target="_blank" class="underline hover:text-blue-200">Myfinancecare.in</a> | Call us: <a href="tel:+917503782090" class="underline hover:text-blue-200">+91 75037 82090</a>
+        </p>
+        <p class="poster-disclaimer">
+            *Interest rates are subject to change and depend on individual eligibility and market conditions.
+        </p>
+    </div>
+
+    <!-- React Application Section -->
+    <div id="react-app-root" class="flex flex-col items-center justify-center p-4">
+        <!-- React app will be mounted here -->
+    </div>
+
+    <!-- React and ReactDOM CDNs -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <!-- Babel for JSX transformation in browser (for development/demo purposes) -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <!-- Partner Banks Slideshow JavaScript -->
+    <script type="text/babel">
+        // React App component
+        const App = () => {
+          // State variables for form inputs
+          const [loanAmount, setLoanAmount] = React.useState('');
+          const [desiredRate, setDesiredRate] = React.useState('');
+          const [loanTerm, setLoanTerm] = React.useState(''); // In years
+
+          // State variables for calculation results
+          const [monthlyPayment, setMonthlyPayment] = React.useState(null);
+          const [amortizationSchedule, setAmortizationSchedule] = React.useState([]);
+          const [message, setMessage] = React.useState('');
+
+          // Function to calculate estimated monthly payment (simplified for demo)
+          const calculateMonthlyPayment = (principal, annualRate, years) => {
+            if (principal <= 0 || annualRate < 0 || years <= 0) {
+              return 0;
+            }
+            const monthlyRate = (annualRate / 100) / 12;
+            const numberOfPayments = years * 12;
+
+            if (monthlyRate === 0) { // Handle zero interest rate
+              return principal / numberOfPayments;
+            }
+
+            // M = P [ i(1 + i)^n ] / [ (1 + i)^n – 1]
+            const numerator = principal * monthlyRate * Math.pow((1 + monthlyRate), numberOfPayments);
+            const denominator = Math.pow((1 + monthlyRate), numberOfPayments) - 1;
+            return numerator / denominator;
+          };
+
+          // Function to generate amortization schedule
+          const generateAmortizationSchedule = (principal, annualRate, years, monthlyPayment) => {
+            let schedule = [];
+            let remainingBalance = principal;
+            const monthlyRate = (annualRate / 100) / 12;
+            const numberOfPayments = years * 12;
+
+            for (let i = 1; i <= numberOfPayments; i++) {
+              let interestPaid = remainingBalance * monthlyRate;
+              let principalPaid = monthlyPayment - interestPaid;
+
+              // Adjust last payment to account for floating point inaccuracies
+              if (i === numberOfPayments) {
+                principalPaid = remainingBalance;
+                interestPaid = monthlyPayment - principalPaid; // Recalculate interest for the last payment
+              }
+
+              remainingBalance -= principalPaid;
+              if (remainingBalance < 0) remainingBalance = 0; // Ensure balance doesn't go negative
+
+              schedule.push({
+                paymentNo: i,
+                monthlyPayment: monthlyPayment.toFixed(2),
+                principalPaid: principalPaid.toFixed(2),
+                interestPaid: interestPaid.toFixed(2),
+                remainingBalance: remainingBalance.toFixed(2)
+              });
+            }
+            return schedule;
+          };
+
+
+          // Handle form submission
+          const handleSubmit = (e) => {
+            e.preventDefault();
+            setMessage('');
+            setMonthlyPayment(null);
+            setAmortizationSchedule([]);
+
+            const principal = parseFloat(loanAmount);
+            const newRate = parseFloat(desiredRate);
+            const termYears = parseFloat(loanTerm);
+
+            if (isNaN(principal) || isNaN(newRate) || isNaN(termYears) || principal <= 0 || newRate < 0 || termYears <= 0) {
+              setMessage('Please enter valid positive numbers for all fields.');
+              return;
+            }
+
+            const calculatedMonthlyPayment = calculateMonthlyPayment(principal, newRate, termYears);
+            setMonthlyPayment(calculatedMonthlyPayment.toFixed(2));
+
+            const schedule = generateAmortizationSchedule(principal, newRate, termYears, calculatedMonthlyPayment);
+            setAmortizationSchedule(schedule);
+
+            setMessage('Your estimated monthly payment and amortization schedule are calculated.');
+          };
+
+          // Reset form fields and results
+          const handleReset = () => {
+            setLoanAmount('');
+            setDesiredRate('');
+            setLoanTerm('');
+            setMonthlyPayment(null);
+            setAmortizationSchedule([]);
+            setMessage('');
+          };
+
+          return (
+            <div className="w-full"> {/* Added w-full to make it responsive within its container */}
+              <h1 className="text-4xl font-extrabold text-gray-800 mb-6 font-inter">
+                Home Loan Payment Calculator
+              </h1>
+              <p className="text-gray-600 text-lg mb-8">
+                  Estimate your monthly payments for your dream home.
+              </p>
+
+              <form onSubmit={handleSubmit} className="space-y-6">
+                {/* Loan Amount Input */}
+                <div>
+                  <label htmlFor="loanAmount" className="block text-left text-gray-700 text-sm font-medium mb-2">
+                    Loan Amount (₹)
+                  </label>
+                  <input
+                    type="number"
+                    id="loanAmount"
+                    value={loanAmount}
+                    onChange={(e) => setLoanAmount(e.target.value)}
+                    placeholder="e.g., 2500000"
+                    className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-600 focus:border-blue-600 transition duration-200"
+                    required
+                    min="0"
+                  />
+                </div>
+
+                {/* Desired Interest Rate Input */}
+                <div>
+                  <label htmlFor="desiredRate" className="block text-left text-gray-700 text-sm font-medium mb-2">
+                    Annual Interest Rate (%)
+                  </label>
+                  <input
+                    type="number"
+                    id="desiredRate"
+                    value={desiredRate}
+                    onChange={(e) => setDesiredRate(e.target.value)}
+                    placeholder="e.g., 8.5"
+                    step="0.01"
+                    className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-600 focus:border-blue-600 transition duration-200"
+                    required
+                    min="0"
+                  />
+                </div>
+
+                {/* Loan Term Input */}
+                <div>
+                  <label htmlFor="loanTerm" className="block text-left text-gray-700 text-sm font-medium mb-2">
+                    Loan Term (Years)
+                  </label>
+                  <input
+                    type="number"
+                    id="loanTerm"
+                    value={loanTerm}
+                    onChange={(e) => setLoanTerm(e.target.value)}
+                    placeholder="e.g., 30"
+                    className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-600 focus:border-blue-600 transition duration-200"
+                    required
+                    min="1"
+                  />
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex justify-center space-x-4 mt-6">
+                  <button
+                    type="submit"
+                    className="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-xl transition duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg focus:outline-none focus:ring-4 focus:ring-green-300"
+                  >
+                    Calculate
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleReset}
+                    className="bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-8 rounded-xl transition duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg focus:outline-none focus:ring-4 focus:ring-red-300"
+                  >
+                    Reset
+                  </button>
+                </div>
+              </form>
+
+              {/* Results Display */}
+              {monthlyPayment !== null && (
+                <div className="mt-8 p-6 bg-blue-50 border border-blue-200 rounded-xl shadow-inner">
+                  <h2 className="text-2xl font-semibold text-blue-800 mb-4">Your Estimated Monthly Payment:</h2>
+                  <p className="text-4xl font-bold text-blue-700 mb-2">
+                    ₹{monthlyPayment}
+                  </p>
+                  {message && (
+                      <p className="mt-4 text-md font-medium text-gray-600">{message}</p>
+                  )}
+
+                  {/* Amortization Schedule Table */}
+                  {amortizationSchedule.length > 0 && (
+                    <div className="amortization-table-container">
+                      <h3 className="text-xl font-semibold text-gray-800 my-4">Amortization Schedule</h3>
+                      <table className="amortization-table">
+                        <thead>
+                          <tr>
+                            <th>Payment No.</th>
+                            <th>Monthly Payment</th>
+                            <th>Principal Paid</th>
+                            <th>Interest Paid</th>
+                            <th>Remaining Balance</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {amortizationSchedule.map((payment, index) => (
+                            <tr key={index}>
+                              <td>{payment.paymentNo}</td>
+                              <td>₹{payment.monthlyPayment}</td>
+                              <td>₹{payment.principalPaid}</td>
+                              <td>₹{payment.interestPaid}</td>
+                              <td>₹{payment.remainingBalance}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Error/Info Message */}
+              {message && monthlyPayment === null && (
+                  <p className="mt-6 text-red-600 font-medium">{message}</p>
+              )}
+
+              <p className="text-gray-600 text-sm mt-8">
+                Disclaimer: This is a simplified calculator for estimation purposes only. Actual rates and payments may vary.
+              </p>
+            </div>
+          );
+        };
+
+        // Render the React App component into the 'react-app-root' div
+        const container = document.getElementById('react-app-root');
+        const root = ReactDOM.createRoot(container);
+        root.render(<App />);
+
+        // Partner Banks Slideshow JavaScript
+        window.onload = function() {
+            const bankSlideshowContainer = document.getElementById('bankSlideshow');
+            const banks = [
+                { name: "SBI", logoUrl: "https://i0.wp.com/wordzz.com/wp-content/uploads/2016/10/sbi.jpg" },
+                { name: "HDFC", logoUrl: "https://www.hdfcbank.com/content/api/contentstream-id/723fb80a-2dde-42a3-9793-7ae1be57c87f/190b873d-1269-4b1d-9823-2cfd7f0ee9b3?/Common/Images/2025/HDFC%20Bank%20logos/HDFC_Bank_logo_Regular.jpg" },
+                { name: "BOB", logoUrl: "https://www.mypunepulse.com/wp-content/uploads/2024/10/Bank-of-Baroda-768x443.jpg" },
+                { name: "BAJAJ", logoUrl: "https://globalprimenews.com/wp-content/uploads/2020/07/IMG_20200716_231355.jpg" },
+                { name: "ICICI", logoUrl: "https://kingstonmortgagesolutions.com/wp-content/uploads/2016/12/icici-bank.png" },
+                { name: "AXIS", logoUrl: "https://logodix.com/logo/2210415.png" },
+                { name: "GODREJ", logoUrl: "https://www.mediainfoline.com/wp-content/uploads/2021/07/Godrej-Housing-Finance_Twitter-768x542.jpg" }
+            ];
+            let currentBankIndex = 0;
+            let activeSlideElement = null; // To keep track of the currently visible slide
+
+            function updateBankSlideshow() {
+                const nextBank = banks[currentBankIndex];
+
+                const newSlideElement = document.createElement('div');
+                newSlideElement.className = 'bank-slideshow-item'; // Starts off-screen right
+
+                const imgElement = document.createElement('img');
+                imgElement.src = nextBank.logoUrl;
+                imgElement.alt = nextBank.name + " Logo";
+                imgElement.className = 'bank-slideshow-logo';
+                imgElement.onerror = function() { // Fallback in case image fails to load
+                    const fallbackText = document.createElement('span');
+                    fallbackText.textContent = nextBank.name; // Use nextBank.name here
+                    fallbackText.className = 'bank-slideshow-fallback-text'; // Apply fallback text style
+                    newSlideElement.innerHTML = ''; // Clear broken image
+                    newSlideElement.appendChild(fallbackText);
+                    console.error('Failed to load logo for:', nextBank.name, 'from', this.src);
+                };
+                newSlideElement.appendChild(imgElement);
+
+                bankSlideshowContainer.appendChild(newSlideElement);
+
+                // If there's an active slide, make it leave
+                if (activeSlideElement) {
+                    activeSlideElement.classList.remove('active');
+                    activeSlideElement.classList.add('leaving');
+                    // Remove the leaving element after its transition is complete
+                    activeSlideElement.addEventListener('transitionend', function handler() {
+                        if (this.parentNode) {
+                            this.parentNode.removeChild(this);
+                        }
+                        this.removeEventListener('transitionend', handler);
+                    });
+                }
+
+                // Immediately trigger reflow to ensure transition works
+                void newSlideElement.offsetWidth; // Force reflow
+                newSlideElement.classList.add('active'); // Slide into view
+
+                activeSlideElement = newSlideElement; // Set new slide as active
+
+                currentBankIndex = (currentBankIndex + 1) % banks.length;
+            }
+
+            // Initial call to display the first bank
+            updateBankSlideshow();
+
+            // Change bank logo every 2.5 seconds (2500ms)
+            setInterval(updateBankSlideshow, 2500);
+        };
+    </script>
+</body>
+</html>
